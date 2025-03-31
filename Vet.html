@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    height: auto; /* Allow height to adjust dynamically */
+    padding: 20px; /* Add padding for better spacing */
+        }
+
+#healthForm, #vbaForm {
+    display: none; /* Hidden by default */
+    width: 100%; /* Ensure forms take up full width */
+    }
+
+body {
+    background-color: #f2f2f2;
+}
+
+
+form {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    padding: 20px;
+    margin: 20px auto;
+    width: 50%;
+    box-shadow: 5px 10px #888888;
+}
+
+input[type="radio"] {
+    margin: 10px 5px;
+}
+
+input[type="checkbox"] {
+    margin: 10px 5px;
+}
+
+input[type="submit"] {
+    background-color: #ff0000; /* Red */
+    color: #ffffff; /* White */
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+input[type="submit"]:hover {
+    opacity:1;
+}
+
+label {
+    color: #0000ff; /* Blue */
+}
+
+#Title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Stack elements vertically */
+    height: 200px; /* Adjust height as needed */
+    padding: 20px; /* Add padding for better spacing */
+    background-image: url(./content/photo/flag.jpeg); /* Replace with your image path */
+    background-size: cover; /* Ensure the image covers the entire area */
+    background-position: center; /* Center the image */
+    color: white; /* Adjust text color for better contrast */
+    text-shadow: 1px 1px 2px black; /* Add text shadow for readability */
+}
+</style>
+</head>
+<body>
+<div id="Title" class="center">
+    <h1>Welcome Veterans and Families</h1>
+</div>
+<div id="Reddit" class="center">
+    <p style="text-align: left; font-size: 14px; color: rgb(20, 17, 17); margin-top: 20px;">
+        Welcome to the Veterans Benefits Resource Tool. This tool is designed to help Veterans and their families find resources and information on benefits available to them. 
+        Please select the type of benefits you are looking for and fill out the form below. 
+        Once you submit the form, you will be redirected to a Google search page with relevant resources based on your selections. 
+    </p>
+<div class="center">
+    <button onclick="openForm('healthForm')">Health Benefits</button>
+    <button onclick="openForm('vbaForm')">Non-Health Benefits</button>
+</div>
+
+<div id="Instructions" class="center">
+    <H2>
+        Instructions
+    </H2>
+    <p style="text-align: left; font-size: 14px; color: rgb(20, 17, 17); margin-top: 20px;">
+        Please select the type of benefits you are looking for and fill out the form below. Once you submit the form, you will be redirected to a Google search page with relevant resources based on your selections.  
+    </p>
+</div>
+
+<div id="healthForm" class="center">
+    <form>
+        <div>
+            <p>Is this Disability already rated?</p>
+            <input type="radio" id="yes" name="disability" value="yes" onclick="showOptions('yesOptions')">
+            <label for="yes">Yes</label><br>
+            <input type="radio" id="no" name="disability" value="no" onclick="showOptions('noOptions')">
+            <label for="no">No</label><br>
+        </div>
+    
+        <div id="yesOptions">
+            <input type="checkbox" id="CHAMP VA" name="CHAMP VA">
+            <label for="CHAMP VA">CHAMP VA</label><br>
+            <input type="checkbox" id="community Care" name="Community Care">
+            <label for="Community Care">Community Care</label><br>
+            <input type="checkbox" id="VA Locations" name="VA Locations">
+            <label for="VA Locations">VA Locations</label><br>
+            <input type="checkbox" id="Health Services" name="Health Services">
+            <label for="Health Services">Health Services</label><br>
+        </div>
+    
+        <div id="noOptions">
+            <input type="checkbox" id="Veteran Services" name="Veteran Services">
+            <label for="Veteran Services">Veteran Services</label><br>
+            <input type="checkbox" id="Veteran Resource" name="Veteran Resource">
+            <label for="Veteran Resource">Veteran Resource</label><br>
+            <input type="checkbox" id="VA Enrollment" name=" VA Enrollment">
+            <label for="VA Enrollment">VA Enrollment</label><br>
+            <input type="checkbox" id="VA Appeal" name="VA Appeal">
+            <label for="VA Appeal">VA Appeal</label><br>
+        </div>
+    
+        <div>
+            <label for="state">State:</label>
+            <select id="state" name="state">
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+            </select>
+        </div>
+    
+        <div>
+            <label for="county">County:</label>
+            <input type="text" id="county" name="county">
+        </div>
+    
+        <div>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city">
+        </div>
+    
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<div id="vbaForm" class="center">
+    <form>
+        <div>
+            <p>Is this for the Veteran or family member?</p>
+            <input type="radio" id="Veteran" name="disability" value="Veteran" onclick="showOptions('VeteranOptions')">
+            <label for="Veteran">Veteran</label><br>
+            <input type="radio" id="Family" name="disability" value="Family" onclick="showOptions('familyOptions')">
+            <label for="Family">Family</label><br>
+        </div>
+    
+        <div id="VeteranOptions">
+            <input type="checkbox" id="CHAMP VA" name="CHAMP VA">
+            <label for="CHAMP VA">CHAMP VA</label><br>
+            <input type="checkbox" id="community Care" name="Community Care">
+            <label for="Community Care">Community Care</label><br>
+            <input type="checkbox" id="VA Locations" name="VA Locations">
+            <label for="VA Locations">VA Locations</label><br>
+            <input type="checkbox" id="Health Services" name="Health Services">
+            <label for="Health Services">Health Services</label><br>
+        </div>
+    
+        <div id="FamilyOptions">
+            <input type="checkbox" id="Veteran Services" name="Veteran Services">
+            <label for="Veteran Services">Veteran Services</label><br>
+            <input type="checkbox" id="Veteran Resource" name="Veteran Resource">
+            <label for="Veteran Resource">Veteran Resource</label><br>
+            <input type="checkbox" id="VA Enrollment" name=" VA Enrollment">
+            <label for="VA Enrollment">VA Enrollment</label><br>
+            <input type="checkbox" id="VA Appeal" name="VA Appeal">
+            <label for="VA Appeal">VA Appeal</label><br>
+        </div>
+    
+        <div>
+            <label for="state">State:</label>
+            <select id="state" name="state">
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+            </select>
+        </div>
+    
+        <div>
+            <label for="county">County:</label>
+            <input type="text" id="county" name="county">
+        </div>
+    
+        <div>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city">
+        </div>
+    
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+
+
+<div id="warning" class="center">
+    <p style="text-align: left; font-size: 14px; color: rgb(20, 17, 17); margin-top: 20px;">
+        Disclaimer: The information provided on this page is for general guidance only. Users are encouraged to perform their own due diligence and verify the accuracy and reliability of any resources or websites accessed through this tool. We are not responsible for the content or accuracy of external sites.  </p>
+    
+</div>
+
+<script>
+    function openForm(formId) {
+        // Hide all forms
+        document.getElementById('healthForm').style.display = 'none';
+        document.getElementById('vbaForm').style.display = 'none';
+
+        // Show the requested form
+        document.getElementById(formId).style.display = 'block';
+    }
+
+    function showOptions(id) {
+        // Hide all option groups
+        document.getElementById('yesOptions').style.display = 'none';
+        document.getElementById('noOptions').style.display = 'none';
+
+        // Show the selected option group
+        document.getElementById(id).style.display = 'block';
+    }
+
+    document.getElementById('yes').addEventListener('change', function(event) {
+        if (event.target.checked) {
+            showOptions('yesOptions');
+        }
+    });
+
+    document.getElementById('no').addEventListener('change', function(event) {
+        if (event.target.checked) {
+            showOptions('noOptions');
+        }
+    });
+
+    document.getElementById('healthForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Get form data
+        var disability = document.querySelector('input[name="disability"]:checked').value;
+        var state = document.getElementById('state').value;
+        var county = document.getElementById('county').value;
+        var city = document.getElementById('city').value;
+
+        // Get selected options
+        var yesOptions = Array.from(document.querySelectorAll('#yesOptions input[type="checkbox"]:checked')).map(function(checkbox) {
+            return checkbox.name;
+        });
+
+        var noOptions = Array.from(document.querySelectorAll('#noOptions input[type="checkbox"]:checked')).map(function(checkbox) {
+            return checkbox.name;
+        });
+
+        // Create Google search query
+        var query = yesOptions.join('+') + '+' + noOptions.join('+') + '+' + state + '+' + county + '+' + city;
+
+        // Open Google search in new tab
+        window.open('https://www.google.com/search?q=' + encodeURIComponent(query), '_blank');
+    });
+
+    
+    document.getElementById('vbaForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get form data
+    var disability = document.querySelector('input[name="disability"]:checked').value;
+    var state = document.getElementById('state').value;
+    var county = document.getElementById('county').value;
+    var city = document.getElementById('city').value;
+
+    // Get selected options
+    var veteranOptions = Array.from(document.querySelectorAll('#VeteranOptions input[type="checkbox"]:checked')).map(function(checkbox) {
+        return checkbox.name;
+    });
+
+    var familyOptions = Array.from(document.querySelectorAll('#FamilyOptions input[type="checkbox"]:checked')).map(function(checkbox) {
+        return checkbox.name;
+    });
+
+    // Create Google search query
+    var query = veteranOptions.join('+') + '+' + familyOptions.join('+') + '+' + state + '+' + county + '+' + city;
+
+    // Open Google search in new tab
+    window.open('https://www.google.com/search?q=' + encodeURIComponent(query), '_blank');
+});
+
+    // Call showOptions with the id of the initially selected option group
+    var selectedDisability = document.querySelector('input[name="disability"]:checked');
+    if (selectedDisability) {
+        showOptions(selectedDisability.value === 'yes' ? 'yesOptions' : 'noOptions');
+    }
+
+    // Disable checkboxes until a radio button is selected
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.disabled = !selectedDisability;
+    });
+
+    // Enable checkboxes when a radio button is selected
+    var radios = document.querySelectorAll('input[name="disability"]');
+    radios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            checkboxes.forEach(function(checkbox) {
+                checkbox.disabled = false;
+            });
+        });
+    });
+    /--VBA--/ 
+
+    function showOptions(id) {
+        // Hide all option groups
+        document.getElementById('VeteranOptions').style.display = 'none';
+        document.getElementById('FamilyOptions').style.display = 'none';
+
+        // Show the selected option group
+        document.getElementById(id).style.display = 'block';
+    }
+
+    
+    document.getElementById('Veteran').addEventListener('change', function(event) {
+        if (event.target.checked) {
+            showOptions('VeteranOptions');
+        }
+    });
+
+    document.getElementById('Family').addEventListener('change', function(event) {
+        if (event.target.checked) {
+            showOptions('FamilyOptions');
+        }
+    });
+
+</script>
+
+<footer style="background-color: #f2f2f2; padding: 20px; text-align: center; border-top: 1px solid #ccc; margin-top: 20px;">
+    <p style="font-size: 14px; color: rgb(14, 3, 43);">Helpful Links:</p>
+    <a href="https://www.va.gov/" target="_blank" style="margin: 0 10px; color: blue; text-decoration: none;">VA Official Site</a>
+    <a href="https://www.veteranscrisisline.net/" target="_blank" style="margin: 0 10px; color: blue; text-decoration: none;">Veterans Crisis Line</a>
+    <a href="https://www.benefits.va.gov/compensation/" target="_blank" style="margin: 0 10px; color: blue; text-decoration: none;">VA Compensation Benefits</a>
+    <a href="https://www.ebenefits.va.gov/" target="_blank" style="margin: 0 10px; color: blue; text-decoration: none;">eBenefits</a>
+    <a href="https://www.veteransbenefitskb.com/" target="_blank" style="margin: 0 10px; color: blue; text-decoration: none;">Reddit Knowledge base</a>
+</footer>
+
+
+</body>
+</html>
