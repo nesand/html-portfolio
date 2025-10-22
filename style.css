@@ -6,3 +6,17 @@ button{padding:6px 10px;cursor:pointer}
 table{width:100%;border-collapse:collapse;background:#fff}
 th,td{border:1px solid #ddd;padding:8px;text-align:left}
 th{background:#0b5cff;color:#fff}
+
+.horizontal-nav ul {
+    list-style: none;
+    padding: 2px;
+    margin: 2px;
+    display: flex
+;
+    justify-content: center;
+    background-color: #b6b2b2;
+        color: blue;
+    }
+    .horizontal-nav ul li {
+    margin: 0 15px;
+}
