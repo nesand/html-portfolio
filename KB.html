@@ -1,427 +1,163 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Edit3, Plus, Upload, Download, Search, Database, RefreshCcw } from "lucide-react";
-import * as XLSX from "xlsx";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Knowledge Base</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h1>Knowledge Base</h1>
 
-// Types
-export type KBItem = {
-  id: string;
-  title: string;
-  url: string;
-  tags: string[];
-  notes: string;
-  createdAt: string; // ISO
-  updatedAt: string; // ISO
-};
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search topic">
+    <button onclick="filterData()">Search</button>
+    <button onclick="resetData()">Reset</button>
+    <button onclick="downloadFiltered('xlsx')">Download Excel</button>
+    <button onclick="downloadFiltered('csv')">Download CSV</button>
+  </div>
 
-const STORAGE_KEY = "kb_items_v1";
+  <table id="results">
+    <thead>
+      <tr>
+        <th onclick="sortTable('Title')">Title</th>
+        <th onclick="sortTable('Notes')">Notes</th>
+        <th onclick="sortTable('Tags')">Tags</th>
+        <th onclick="sortTable('URL')">URL</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-function uid() {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
+  <script>
+    let kb = [];
+    let filteredData = [];
+    let sortDirection = 1;
+    let currentSortColumn = '';
 
-function save(items: KBItem[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-}
+    async function loadExcelData() {
+      const response = await fetch('knowledge_data.xlsx');
+      const arrayBuffer = await response.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      let combined = [];
 
-function load(): KBItem[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as KBItem[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
+      workbook.SheetNames.forEach(sheetName => {
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+        rows.forEach(row => {
+          combined.push({
+            Title: row.Title || row.title || '',
+            Notes: row.Notes || row.Note || row.notes || '',
+            Tags: row.Tags || row.Tag || '',
+            URL: row.URL || row.Link || ''
+          });
+        });
+      });
 
-function csvEscape(s: string) {
-  if (s.includes(",") || s.includes("\n") || s.includes('"')) {
-    return '"' + s.replaceAll('"', '""') + '"';
-  }
-  return s;
-}
+      kb = combined;
+      restoreSettings();
+    }
 
-function download(filename: string, data: BlobPart, type = "text/plain") {
-  const url = URL.createObjectURL(new Blob([data], { type }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
+    function displayResults(data) {
+      const body = document.querySelector('#results tbody');
+      body.innerHTML = data.map(d =>
+        `<tr>
+          <td>${d.Title}</td>
+          <td>${d.Notes}</td>
+          <td>${d.Tags}</td>
+          <td>${d.URL ? `<a href="${d.URL}" target="_blank">${d.URL}</a>` : ''}</td>
+        </tr>`
+      ).join('');
+      filteredData = data;
+    }
 
-function useDebounced<T>(value: T, delay = 250) {
-  const [v, setV] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setV(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return v;
-}
+    function filterData() {
+      const query = document.getElementById('search').value.toLowerCase();
+      localStorage.setItem('kb_search', query);
 
-const emptyItem = (): KBItem => ({
-  id: "",
-  title: "",
-  url: "",
-  tags: [],
-  notes: "",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-});
-
-export default function App() {
-  const [items, setItems] = useState<KBItem[]>(load());
-  const [query, setQuery] = useState("");
-  const [tagFilter, setTagFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("updatedAt_desc");
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [page, setPage] = useState<number>(1);
-
-  const [editing, setEditing] = useState<KBItem | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  useEffect(() => save(items), [items]);
-
-  const allTags = useMemo(() => {
-    const s = new Set<string>();
-    items.forEach(i => i.tags.forEach(t => s.add(t)));
-    return Array.from(s).sort((a, b) => a.localeCompare(b));
-  }, [items]);
-
-  const debouncedQuery = useDebounced(query, 250);
-
-  const filtered = useMemo(() => {
-    const q = debouncedQuery.trim().toLowerCase();
-    const byQuery = (i: KBItem) => {
-      if (!q) return true;
-      return (
-        i.title.toLowerCase().includes(q) ||
-        i.url.toLowerCase().includes(q) ||
-        i.notes.toLowerCase().includes(q) ||
-        i.tags.some(t => t.toLowerCase().includes(q))
+      const filtered = kb.filter(d =>
+        d.Title.toLowerCase().includes(query) ||
+        d.Notes.toLowerCase().includes(query) ||
+        d.Tags.toLowerCase().includes(query) ||
+        d.URL.toLowerCase().includes(query)
       );
-    };
-    const byTag = (i: KBItem) => tagFilter === "all" ? true : i.tags.includes(tagFilter);
-    let arr = items.filter(i => byQuery(i) && byTag(i));
-    switch (sortBy) {
-      case "title_asc":
-        arr.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case "title_desc":
-        arr.sort((a, b) => b.title.localeCompare(a.title));
-        break;
-      case "createdAt_desc":
-        arr.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-        break;
-      case "createdAt_asc":
-        arr.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-        break;
-      case "updatedAt_asc":
-        arr.sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
-        break;
-      default:
-        arr.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      displayResults(filtered);
     }
-    return arr;
-  }, [items, debouncedQuery, tagFilter, sortBy]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
-
-  useEffect(() => {
-    if (page > totalPages) setPage(1);
-  }, [totalPages, page]);
-
-  function openCreate() {
-    setEditing({ ...emptyItem(), id: uid() });
-    setIsDialogOpen(true);
-  }
-
-  function openEdit(item: KBItem) {
-    setEditing({ ...item });
-    setIsDialogOpen(true);
-  }
-
-  function upsert(item: KBItem) {
-    item.updatedAt = new Date().toISOString();
-    setItems(prev => {
-      const idx = prev.findIndex(p => p.id === item.id);
-      if (idx === -1) return [item, ...prev];
-      const copy = [...prev];
-      copy[idx] = item;
-      return copy;
-    });
-    setIsDialogOpen(false);
-  }
-
-  function remove(id: string) {
-    if (!confirm("Delete this entry")) return;
-    setItems(prev => prev.filter(p => p.id !== id));
-  }
-
-  function clearAll() {
-    if (!confirm("Delete all entries")) return;
-    setItems([]);
-  }
-
-  function onImportExcel(file: File) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const wb = XLSX.read(data, { type: "array" });
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(ws, { defval: "" }) as any[];
-      const now = new Date().toISOString();
-      const mapped: KBItem[] = json.map((row) => {
-        const keys = Object.fromEntries(
-          Object.entries(row).map(([k, v]) => [k.toString().trim().toLowerCase(), v])
-        ) as Record<string, any>;
-        const title = String(keys["title"] || keys["name"] || "").trim();
-        const url = String(keys["url"] || keys["link"] || "").trim();
-        const notes = String(keys["notes"] || keys["note"] || keys["description"] || "").trim();
-        const tagsRaw = String(keys["tags"] || keys["tag"] || "").trim();
-        const tags = tagsRaw ? tagsRaw.split(/,|;|\|/).map(s => s.trim()).filter(Boolean) : [];
-        return {
-          id: uid(),
-          title,
-          url,
-          notes,
-          tags,
-          createdAt: now,
-          updatedAt: now,
-        } as KBItem;
-      }).filter(i => i.title);
-      setItems(prev => [...mapped, ...prev]);
-    };
-    reader.readAsArrayBuffer(file);
-  }
-
-  function exportCSV() {
-    const header = ["title", "url", "tags", "notes", "createdAt", "updatedAt"];
-    const rows = items.map(i => [
-      csvEscape(i.title),
-      csvEscape(i.url),
-      csvEscape(i.tags.join("|")),
-      csvEscape(i.notes),
-      i.createdAt,
-      i.updatedAt,
-    ].join(","));
-    const csv = header.join(",") + "\n" + rows.join("\n");
-    download("knowledge_base.csv", csv, "text/csv;charset=utf-8");
-  }
-
-  function exportJSON() {
-    download("knowledge_base.json", JSON.stringify(items, null, 2), "application/json");
-  }
-
-  function resetDemoData() {
-    const now = new Date().toISOString();
-    const demo: KBItem[] = [
-      { id: uid(), title: "How to reset password", url: "", tags: ["faq"], notes: "Steps for password reset", createdAt: now, updatedAt: now },
-      { id: uid(), title: "Printer troubleshooting", url: "", tags: ["troubleshooting"], notes: "Common errors and fixes", createdAt: now, updatedAt: now },
-      { id: uid(), title: "Onboarding guide", url: "", tags: ["how to", "documentation"], notes: "New hire checklist", createdAt: now, updatedAt: now },
-    ];
-    setItems(demo);
-  }
-
-  return (
-    <div className="min-h-screen bg-neutral-50 p-4 md:p-8">
-      <div className="mx-auto max-w-6xl space-y-4">
-        <header className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Knowledge Base</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={exportCSV} title="Export CSV"><Download className="mr-2 h-4 w-4"/>CSV</Button>
-            <Button variant="outline" onClick={exportJSON} title="Export JSON"><Download className="mr-2 h-4 w-4"/>JSON</Button>
-            <label className="inline-flex items-center">
-              <input type="file" accept=".xlsx,.xls" className="hidden" onChange={e => e.target.files && onImportExcel(e.target.files[0])} />
-              <Button variant="secondary" onClick={() => (document.querySelector<HTMLInputElement>('input[type=file]')?.click())}><Upload className="mr-2 h-4 w-4"/>Import Excel</Button>
-            </label>
-            <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4"/>Add</Button>
-          </div>
-        </header>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Search and filters</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-4">
-            <div className="md:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4"/>
-                <Input placeholder="Search title, tags, notes" value={query} onChange={e => setQuery(e.target.value)} className="pl-8"/>
-              </div>
-            </div>
-            <div>
-              <Label className="text-xs">Tag</Label>
-              <Select value={tagFilter} onValueChange={v => setTagFilter(v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All tags" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  {allTags.map(t => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-xs">Sort</Label>
-              <Select value={sortBy} onValueChange={v => setSortBy(v)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="updatedAt_desc">Last updated, new to old</SelectItem>
-                  <SelectItem value="updatedAt_asc">Last updated, old to new</SelectItem>
-                  <SelectItem value="createdAt_desc">Created, new to old</SelectItem>
-                  <SelectItem value="createdAt_asc">Created, old to new</SelectItem>
-                  <SelectItem value="title_asc">Title A to Z</SelectItem>
-                  <SelectItem value="title_desc">Title Z to A</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base">Entries ({filtered.length})</CardTitle>
-            <div className="flex items-center gap-2">
-              <Select value={String(pageSize)} onValueChange={v => setPageSize(parseInt(v))}>
-                <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" onClick={() => setPage(Math.max(1, page - 1))}>Prev</Button>
-              <div className="text-sm px-2">{page} / {totalPages}</div>
-              <Button variant="outline" onClick={() => setPage(Math.min(totalPages, page + 1))}>Next</Button>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[28%]">Title</TableHead>
-                  <TableHead className="w-[22%]">URL</TableHead>
-                  <TableHead className="w-[20%]">Tags</TableHead>
-                  <TableHead>Notes</TableHead>
-                  <TableHead className="w-[120px] text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pageItems.map(item => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.title}</TableCell>
-                    <TableCell>
-                      {item.url ? (
-                        <a className="text-blue-600 hover:underline" href={item.url} target="_blank" rel="noreferrer">Open</a>
-                      ) : (
-                        <span className="text-neutral-400">None</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="space-x-1">
-                      {item.tags.length ? item.tags.map(t => <Badge key={t} variant="secondary">{t}</Badge>) : <span className="text-neutral-400">None</span>}
-                    </TableCell>
-                    <TableCell className="max-w-[280px] truncate" title={item.notes}>{item.notes}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="icon" onClick={() => openEdit(item)} title="Edit"><Edit3 className="h-4 w-4"/></Button>
-                        <Button variant="destructive" size="icon" onClick={() => remove(item.id)} title="Delete"><Trash2 className="h-4 w-4"/></Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {pageItems.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center text-neutral-500 py-10">No results</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Tools</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            <Button variant="secondary" onClick={resetDemoData}><Database className="mr-2 h-4 w-4"/>Load demo data</Button>
-            <Button variant="destructive" onClick={clearAll}><Trash2 className="mr-2 h-4 w-4"/>Delete all</Button>
-            <Button variant="outline" onClick={() => window.location.reload()} title="Reload"><RefreshCcw className="mr-2 h-4 w-4"/>Reload</Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <EditDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} item={editing} onSave={upsert} />
-    </div>
-  );
-}
-
-function EditDialog({ open, onOpenChange, item, onSave }: { open: boolean; onOpenChange: (v: boolean) => void; item: KBItem | null; onSave: (i: KBItem) => void }) {
-  const [local, setLocal] = useState<KBItem | null>(item);
-
-  useEffect(() => setLocal(item), [item]);
-
-  if (!local) return null;
-
-  function submit() {
-    if (!local.title.trim()) {
-      alert("Title is required");
-      return;
+    function resetData() {
+      document.getElementById('search').value = '';
+      localStorage.removeItem('kb_search');
+      displayResults(kb);
     }
-    onSave({ ...local, title: local.title.trim(), url: local.url.trim(), tags: local.tags.map(t => t.trim()).filter(Boolean) });
-  }
 
-  function set<K extends keyof KBItem>(key: K, value: KBItem[K]) {
-    setLocal(prev => prev ? { ...prev, [key]: value } as KBItem : prev);
-  }
+    function sortTable(column) {
+      if (currentSortColumn === column) {
+        sortDirection *= -1;
+      } else {
+        currentSortColumn = column;
+        sortDirection = 1;
+      }
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle>{local.id ? "Edit entry" : "New entry"}</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-3">
-          <div className="grid gap-1">
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" value={local.title} onChange={e => set("title", e.target.value)} placeholder="Short name" />
-          </div>
-          <div className="grid gap-1">
-            <Label htmlFor="url">URL</Label>
-            <Input id="url" value={local.url} onChange={e => set("url", e.target.value)} placeholder="https://..." />
-          </div>
-          <div className="grid gap-1">
-            <Label htmlFor="tags">Tags</Label>
-            <Input id="tags" value={local.tags.join(", ")} onChange={e => set("tags", e.target.value.split(/,|;|\|/).map(s => s.trim()).filter(Boolean))} placeholder="faq, documentation, how to, troubleshooting" />
-          </div>
-          <div className="grid gap-1">
-            <Label htmlFor="notes">Notes</Label>
-            <Textarea id="notes" value={local.notes} onChange={e => set("notes", e.target.value)} placeholder="Details" rows={6} />
-          </div>
-        </div>
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={submit}>Save</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      localStorage.setItem('kb_sort_column', column);
+      localStorage.setItem('kb_sort_direction', sortDirection);
+
+      const sorted = [...filteredData].sort((a, b) => {
+        const valA = a[column].toLowerCase();
+        const valB = b[column].toLowerCase();
+        if (valA < valB) return -1 * sortDirection;
+        if (valA > valB) return 1 * sortDirection;
+        return 0;
+      });
+
+      displayResults(sorted);
+    }
+
+    function restoreSettings() {
+      const savedSearch = localStorage.getItem('kb_search');
+      const savedColumn = localStorage.getItem('kb_sort_column');
+      const savedDirection = parseInt(localStorage.getItem('kb_sort_direction')) || 1;
+
+      if (savedSearch) document.getElementById('search').value = savedSearch;
+
+      displayResults(kb);
+
+      if (savedSearch) filterData();
+      if (savedColumn) {
+        sortDirection = savedDirection;
+        currentSortColumn = savedColumn;
+        sortTable(savedColumn);
+      }
+    }
+
+    function getTimestamp() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}_${hours}${minutes}`;
+    }
+
+    function downloadFiltered(format) {
+      if (!filteredData.length) {
+        alert('No data to download.');
+        return;
+      }
+
+      const ws = XLSX.utils.json_to_sheet(filteredData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Filtered_Results');
+      const timestamp = getTimestamp();
+
+      if (format === 'csv') {
+        XLSX.writeFile(wb, `KnowledgeBase_Results_${timestamp}.csv`, { bookType: 'csv' });
+      } else {
+        XLSX.writeFile(wb, `KnowledgeBase_Results_${timestamp}.xlsx`);
+      }
+    }
+
+    loadExcelData();
+  </script>
+</body>
+</html>
