@@ -1,5 +1,3 @@
-// Veterans Tool Script with Expanded Options
-
 window.openVetForm = function(id) {
   document.getElementById('healthVetForm').style.display = 'none';
   document.getElementById('vbaVetForm').style.display = 'none';
@@ -35,11 +33,10 @@ window.onload = function() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
   }
-  console.log('Veterans Tool loaded - Expanded options active');
+  console.log('Veterans Tool loaded with banner header');
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Health Form
   document.getElementById('healthVetFormElem').addEventListener('submit', function(e) {
     e.preventDefault();
     const state = document.getElementById('stateHealthVet').value;
@@ -56,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.open('https://www.google.com/search?q=' + encodeURIComponent(query), '_blank');
   });
 
-  // VBA Form
   document.getElementById('vbaVetFormElem').addEventListener('submit', function(e) {
     e.preventDefault();
     const state = document.getElementById('stateVbaVet').value;

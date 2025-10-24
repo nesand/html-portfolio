@@ -1,1 +1,63 @@
-body{font-family:Arial;background:#f2f2f2;color:#000;}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  color: #000;
+  margin: 0;
+}
+
+.vet-header {
+  background: url('content/photo/flag.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  height: 250px;
+  position: relative;
+  color: white;
+  text-align: center;
+}
+
+.header-overlay {
+  background: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-buttons button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: #00529B;
+  color: white;
+  font-weight: bold;
+}
+
+.nav-buttons button:hover {
+  background-color: #003f7d;
+}
+
+.center {
+  text-align: center;
+  margin: 20px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #eee;
+}
+
+#scrollTopVetBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 18px;
+  padding: 8px 12px;
+  background-color: #00529B;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

@@ -5,11 +5,13 @@
 <link rel="stylesheet" href="stylevet.css">
 </head>
 <body>
-<header>
-  <h1>Veterans Benefits Resource Tool</h1>
-  <div class="nav-buttons">
-    <button onclick="openVetForm('healthVetForm')">Health Benefits</button>
-    <button onclick="openVetForm('vbaVetForm')">Non-Health Benefits</button>
+<header class="vet-header">
+  <div class="header-overlay">
+    <h1>Veterans Benefits Resource Tool</h1>
+    <div class="nav-buttons">
+      <button onclick="openVetForm('healthVetForm')">Health Benefits</button>
+      <button onclick="openVetForm('vbaVetForm')">Non-Health Benefits</button>
+    </div>
   </div>
 </header>
 
@@ -66,45 +68,27 @@
     <label><input type="radio" name="relation" value="Veteran" onclick="showVetVbaOptions('VeteranVetOptions')"> Veteran</label>
     <label><input type="radio" name="relation" value="Family" onclick="showVetVbaOptions('FamilyVetOptions')"> Family</label>
 
-    <!-- Expanded Veteran Options -->
     <div id="VeteranVetOptions" style="display:none;">
       <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA</label><br>
-      <label><input type="checkbox" name="Community-Care"> Community Care</label><br>
-      <label><input type="checkbox" name="VA-Locations"> VA Locations</label><br>
-      <label><input type="checkbox" name="Health-Services"> Health Services</label><br>
       <label><input type="checkbox" name="Disability-Compensation"> Disability Compensation</label><br>
       <label><input type="checkbox" name="Claims-Status"> Claims Status</label><br>
-      <label><input type="checkbox" name="Appeals"> Appeals</label><br>
+      <label><input type="checkbox" name="Education-Benefits"> Education Benefits</label><br>
+      <label><input type="checkbox" name="Home-Loans"> Home Loans</label><br>
+      <label><input type="checkbox" name="Pension"> Pension</label><br>
       <label><input type="checkbox" name="Vocational-Rehab"> Vocational Rehabilitation</label><br>
-      <label><input type="checkbox" name="Education-Benefits"> Education Benefits (GI Bill)</label><br>
-      <label><input type="checkbox" name="Home-Loans"> VA Home Loans</label><br>
-      <label><input type="checkbox" name="Pension"> Pension and Aid & Attendance</label><br>
-      <label><input type="checkbox" name="Burial-Benefits"> Burial Benefits</label><br>
-      <label><input type="checkbox" name="Employment-Resources"> Employment Resources</label><br>
-      <label><input type="checkbox" name="Mental-Health"> Mental Health Services</label><br>
+      <label><input type="checkbox" name="Appeals"> Appeals</label><br>
       <label><input type="checkbox" name="PTSD-Programs"> PTSD Programs</label><br>
-      <label><input type="checkbox" name="Medical-Records"> Access Medical Records (My HealtheVet)</label><br>
-      <label><input type="checkbox" name="VA-Forms"> VA Forms and Applications</label><br>
-      <label><input type="checkbox" name="Veteran-Crisis-Line"> Veterans Crisis Line</label><br>
+      <label><input type="checkbox" name="VA-Forms"> VA Forms</label><br>
     </div>
 
-    <!-- Expanded Family Options -->
     <div id="FamilyVetOptions" style="display:none;">
-      <label><input type="checkbox" name="Dependents-Education"> Dependents Education Assistance (DEA)</label><br>
-      <label><input type="checkbox" name="Survivor-Benefits"> Survivor and Dependent Benefits</label><br>
-      <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA Health Coverage</label><br>
+      <label><input type="checkbox" name="Dependents-Education"> Dependents Education</label><br>
+      <label><input type="checkbox" name="Survivor-Benefits"> Survivor Benefits</label><br>
+      <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA</label><br>
       <label><input type="checkbox" name="Burial-Benefits"> Burial Benefits</label><br>
-      <label><input type="checkbox" name="VA-Insurance"> VA Life Insurance</label><br>
-      <label><input type="checkbox" name="Caregiver-Support"> Caregiver Support Program</label><br>
-      <label><input type="checkbox" name="Home-Loans"> VA Home Loan Eligibility</label><br>
-      <label><input type="checkbox" name="Pension-Aid"> Survivors Pension / Aid & Attendance</label><br>
-      <label><input type="checkbox" name="Dependency-Indemnity"> Dependency and Indemnity Compensation (DIC)</label><br>
-      <label><input type="checkbox" name="Healthcare-Resources"> Family Healthcare Resources</label><br>
-      <label><input type="checkbox" name="Childcare-Assistance"> Childcare Assistance</label><br>
-      <label><input type="checkbox" name="Employment-Resources"> Employment & Training Resources</label><br>
-      <label><input type="checkbox" name="Mental-Health"> Family Mental Health Support</label><br>
-      <label><input type="checkbox" name="Counseling"> Bereavement & Counseling Services</label><br>
-      <label><input type="checkbox" name="Veteran-Crisis-Line"> Veterans Crisis Line</label><br>
+      <label><input type="checkbox" name="Caregiver-Support"> Caregiver Support</label><br>
+      <label><input type="checkbox" name="Mental-Health"> Family Mental Health</label><br>
+      <label><input type="checkbox" name="Counseling"> Counseling Services</label><br>
     </div>
 
     <label for="stateVbaVet">State (required):</label>
