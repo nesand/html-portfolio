@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="stylevet.css">
+</head>
+<body>
+<header>
+  <h1>Veterans Benefits Resource Tool</h1>
+  <div class="nav-buttons">
+    <button onclick="openVetForm('healthVetForm')">Health Benefits</button>
+    <button onclick="openVetForm('vbaVetForm')">Non-Health Benefits</button>
+  </div>
+</header>
+
+<div id="VetTitle" class="center">
+  <h2>Welcome Veterans and Families</h2>
+</div>
+
+<div class="center">
+  <p>Use the buttons above to select your benefit type. Fill out the form to find resources near you.</p>
+</div>
+
+<!-- HEALTH FORM -->
+<div id="healthVetForm" class="center">
+  <form id="healthVetFormElem">
+    <p>Is this Disability already rated?</p>
+    <label><input type="radio" name="disability" value="yes" onclick="showVetHealthOptions('yesVetOptions')"> Yes</label>
+    <label><input type="radio" name="disability" value="no" onclick="showVetHealthOptions('noVetOptions')"> No</label>
+
+    <div id="yesVetOptions" style="display:none;">
+      <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA</label><br>
+      <label><input type="checkbox" name="Community-Care"> Community Care</label><br>
+      <label><input type="checkbox" name="VA-Locations"> VA Locations</label><br>
+      <label><input type="checkbox" name="Health-Services"> Health Services</label><br>
+    </div>
+
+    <div id="noVetOptions" style="display:none;">
+      <label><input type="checkbox" name="Veteran-Services"> Veteran Services</label><br>
+      <label><input type="checkbox" name="Veteran-Resource"> Veteran Resource</label><br>
+      <label><input type="checkbox" name="VA-Enrollment"> VA Enrollment</label><br>
+      <label><input type="checkbox" name="VA-Appeal"> VA Appeal</label><br>
+    </div>
+
+    <label for="stateHealthVet">State (required):</label>
+    <select id="stateHealthVet" required>
+      <option value="">Select State</option>
+      <option value="Alabama">Alabama</option><option value="Alaska">Alaska</option><option value="Arizona">Arizona</option><option value="Arkansas">Arkansas</option><option value="California">California</option><option value="Colorado">Colorado</option><option value="Connecticut">Connecticut</option><option value="Delaware">Delaware</option><option value="Florida">Florida</option><option value="Georgia">Georgia</option><option value="Hawaii">Hawaii</option><option value="Idaho">Idaho</option><option value="Illinois">Illinois</option><option value="Indiana">Indiana</option><option value="Iowa">Iowa</option><option value="Kansas">Kansas</option><option value="Kentucky">Kentucky</option><option value="Louisiana">Louisiana</option><option value="Maine">Maine</option><option value="Maryland">Maryland</option><option value="Massachusetts">Massachusetts</option><option value="Michigan">Michigan</option><option value="Minnesota">Minnesota</option><option value="Mississippi">Mississippi</option><option value="Missouri">Missouri</option><option value="Montana">Montana</option><option value="Nebraska">Nebraska</option><option value="Nevada">Nevada</option><option value="New Hampshire">New Hampshire</option><option value="New Jersey">New Jersey</option><option value="New Mexico">New Mexico</option><option value="New York">New York</option><option value="North Carolina">North Carolina</option><option value="North Dakota">North Dakota</option><option value="Ohio">Ohio</option><option value="Oklahoma">Oklahoma</option><option value="Oregon">Oregon</option><option value="Pennsylvania">Pennsylvania</option><option value="Rhode Island">Rhode Island</option><option value="South Carolina">South Carolina</option><option value="South Dakota">South Dakota</option><option value="Tennessee">Tennessee</option><option value="Texas">Texas</option><option value="Utah">Utah</option><option value="Vermont">Vermont</option><option value="Virginia">Virginia</option><option value="Washington">Washington</option><option value="West Virginia">West Virginia</option><option value="Wisconsin">Wisconsin</option><option value="Wyoming">Wyoming</option>
+    </select>
+
+    <label for="countyHealthVet">County:</label>
+    <input type="text" id="countyHealthVet">
+
+    <label for="cityHealthVet">City (required):</label>
+    <input type="text" id="cityHealthVet" required>
+
+    <input type="submit" value="Submit">
+    <button type="reset">Reset Form</button>
+  </form>
+</div>
+
+<!-- VBA FORM -->
+<div id="vbaVetForm" class="center">
+  <form id="vbaVetFormElem">
+    <p>Is this for the Veteran or family member?</p>
+    <label><input type="radio" name="relation" value="Veteran" onclick="showVetVbaOptions('VeteranVetOptions')"> Veteran</label>
+    <label><input type="radio" name="relation" value="Family" onclick="showVetVbaOptions('FamilyVetOptions')"> Family</label>
+
+    <!-- Expanded Veteran Options -->
+    <div id="VeteranVetOptions" style="display:none;">
+      <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA</label><br>
+      <label><input type="checkbox" name="Community-Care"> Community Care</label><br>
+      <label><input type="checkbox" name="VA-Locations"> VA Locations</label><br>
+      <label><input type="checkbox" name="Health-Services"> Health Services</label><br>
+      <label><input type="checkbox" name="Disability-Compensation"> Disability Compensation</label><br>
+      <label><input type="checkbox" name="Claims-Status"> Claims Status</label><br>
+      <label><input type="checkbox" name="Appeals"> Appeals</label><br>
+      <label><input type="checkbox" name="Vocational-Rehab"> Vocational Rehabilitation</label><br>
+      <label><input type="checkbox" name="Education-Benefits"> Education Benefits (GI Bill)</label><br>
+      <label><input type="checkbox" name="Home-Loans"> VA Home Loans</label><br>
+      <label><input type="checkbox" name="Pension"> Pension and Aid & Attendance</label><br>
+      <label><input type="checkbox" name="Burial-Benefits"> Burial Benefits</label><br>
+      <label><input type="checkbox" name="Employment-Resources"> Employment Resources</label><br>
+      <label><input type="checkbox" name="Mental-Health"> Mental Health Services</label><br>
+      <label><input type="checkbox" name="PTSD-Programs"> PTSD Programs</label><br>
+      <label><input type="checkbox" name="Medical-Records"> Access Medical Records (My HealtheVet)</label><br>
+      <label><input type="checkbox" name="VA-Forms"> VA Forms and Applications</label><br>
+      <label><input type="checkbox" name="Veteran-Crisis-Line"> Veterans Crisis Line</label><br>
+    </div>
+
+    <!-- Expanded Family Options -->
+    <div id="FamilyVetOptions" style="display:none;">
+      <label><input type="checkbox" name="Dependents-Education"> Dependents Education Assistance (DEA)</label><br>
+      <label><input type="checkbox" name="Survivor-Benefits"> Survivor and Dependent Benefits</label><br>
+      <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA Health Coverage</label><br>
+      <label><input type="checkbox" name="Burial-Benefits"> Burial Benefits</label><br>
+      <label><input type="checkbox" name="VA-Insurance"> VA Life Insurance</label><br>
+      <label><input type="checkbox" name="Caregiver-Support"> Caregiver Support Program</label><br>
+      <label><input type="checkbox" name="Home-Loans"> VA Home Loan Eligibility</label><br>
+      <label><input type="checkbox" name="Pension-Aid"> Survivors Pension / Aid & Attendance</label><br>
+      <label><input type="checkbox" name="Dependency-Indemnity"> Dependency and Indemnity Compensation (DIC)</label><br>
+      <label><input type="checkbox" name="Healthcare-Resources"> Family Healthcare Resources</label><br>
+      <label><input type="checkbox" name="Childcare-Assistance"> Childcare Assistance</label><br>
+      <label><input type="checkbox" name="Employment-Resources"> Employment & Training Resources</label><br>
+      <label><input type="checkbox" name="Mental-Health"> Family Mental Health Support</label><br>
+      <label><input type="checkbox" name="Counseling"> Bereavement & Counseling Services</label><br>
+      <label><input type="checkbox" name="Veteran-Crisis-Line"> Veterans Crisis Line</label><br>
+    </div>
+
+    <label for="stateVbaVet">State (required):</label>
+    <select id="stateVbaVet" required>
+      <option value="">Select State</option>
+      <option value="Alabama">Alabama</option><option value="Alaska">Alaska</option><option value="Arizona">Arizona</option><option value="Arkansas">Arkansas</option><option value="California">California</option><option value="Colorado">Colorado</option><option value="Connecticut">Connecticut</option><option value="Delaware">Delaware</option><option value="Florida">Florida</option><option value="Georgia">Georgia</option><option value="Hawaii">Hawaii</option><option value="Idaho">Idaho</option><option value="Illinois">Illinois</option><option value="Indiana">Indiana</option><option value="Iowa">Iowa</option><option value="Kansas">Kansas</option><option value="Kentucky">Kentucky</option><option value="Louisiana">Louisiana</option><option value="Maine">Maine</option><option value="Maryland">Maryland</option><option value="Massachusetts">Massachusetts</option><option value="Michigan">Michigan</option><option value="Minnesota">Minnesota</option><option value="Mississippi">Mississippi</option><option value="Missouri">Missouri</option><option value="Montana">Montana</option><option value="Nebraska">Nebraska</option><option value="Nevada">Nevada</option><option value="New Hampshire">New Hampshire</option><option value="New Jersey">New Jersey</option><option value="New Mexico">New Mexico</option><option value="New York">New York</option><option value="North Carolina">North Carolina</option><option value="North Dakota">North Dakota</option><option value="Ohio">Ohio</option><option value="Oklahoma">Oklahoma</option><option value="Oregon">Oregon</option><option value="Pennsylvania">Pennsylvania</option><option value="Rhode Island">Rhode Island</option><option value="South Carolina">South Carolina</option><option value="South Dakota">South Dakota</option><option value="Tennessee">Tennessee</option><option value="Texas">Texas</option><option value="Utah">Utah</option><option value="Vermont">Vermont</option><option value="Virginia">Virginia</option><option value="Washington">Washington</option><option value="West Virginia">West Virginia</option><option value="Wisconsin">Wisconsin</option><option value="Wyoming">Wyoming</option>
+    </select>
+
+    <label for="countyVbaVet">County:</label>
+    <input type="text" id="countyVbaVet">
+
+    <label for="cityVbaVet">City (required):</label>
+    <input type="text" id="cityVbaVet" required>
+
+    <input type="submit" value="Submit">
+    <button type="reset">Reset Form</button>
+  </form>
+</div>
+
+<footer>
+  <p>Helpful Links:</p>
+  <a href="https://www.va.gov/" target="_blank">VA Official Site</a> |
+  <a href="https://www.veteranscrisisline.net/" target="_blank">Veterans Crisis Line</a> |
+  <a href="https://www.benefits.va.gov/compensation/" target="_blank">VA Compensation</a> |
+  <a href="https://www.ebenefits.va.gov/" target="_blank">eBenefits</a> |
+  <a href="https://www.veteransbenefitskb.com/" target="_blank">Knowledge Base</a>
+</footer>
+
+<button id="scrollTopVetBtn" title="Go to top">↑</button>
+<script src="scriptvet.js" defer></script>
+</body>
+</html>
