@@ -1,43 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>My Projects</h1>
-        <nav class="horizontal-nav">
-            <ul>
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./Resume.html">Resume</a></li>
-                <li><a href="Projects.html">Projects</a></li>
-                <li><a href="./Contact.html">Contact</a></li>
-                <li><a href="./Projects.html">Projects</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h2>Project 1</h2>
-            <p>Provide a description of your first project here, including its purpose, technologies used, and any notable features.</p>
-        </section>
-        <section>
-            <h2>Knowledge Base</h2>
-            <p>A simplistic outlook for a KB allowing individuals to download the file. </p>
-            <a href="./KB.html"> <img src="./content/photo/Knowledge.base.png" alt="Knowledge Base Page Preview"></a>
-        </section><BR><BR><BR><BR><BR><BR>
-        <section>
-            <h2>Veteran Search</h2>
-             <p>Website to assist Veterans in Searching for assistance.</p>
-             <a href="./Vet.html"> <img src="./content/photo/vet screen.png" alt="Veteran Page Preview"></a>
-           
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2025 Nestor Sandoval. All rights reserved.</p>
-    </footer>
+  <header>
+    <h1>My Projects</h1>
+    <nav class="horizontal-nav" aria-label="Primary">
+      <ul>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./Resume.html">Resume</a></li>
+        <li><a href="./Projects.html" aria-current="page">Projects</a></li>
+        <li><a href="./Contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="filter-bar">
+    <input type="text" id="searchInput" placeholder="Filter projects by keyword..." oninput="filterProjects()">
+  </div>
+
+  <main id="projectContainer">
+    <p style='text-align:center; color:#555;'>Loading projects from Excel...</p>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Nestor Sandoval. All rights reserved.</p>
+  </footer>
+
+  <script>
+  let allProjects = [];
+
+  async function loadProjectsFromExcel() {
+    try {
+      const response = await fetch('project_data.xlsx?t=' + Date.now());
+      if (!response.ok) throw new Error('File not found');
+
+      const arrayBuffer = await response.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+      allProjects = data.filter(item => item.Title && item.Image && item.Link);
+      renderProjects(allProjects);
+    } catch (error) {
+      document.getElementById('projectContainer').innerHTML = '<p style="text-align:center; color:red;">Failed to load project data.</p>';
+      console.error('Error loading Excel:', error);
+    }
+  }
+
+  function renderProjects(projects) {
+    const container = document.getElementById('projectContainer');
+    container.innerHTML = '';
+
+    projects.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'project-card';
+      card.innerHTML = `
+        <img src="${item.Image}" alt="${item.Title} preview" loading="lazy" onerror="this.src='./content/photo/default.png'">
+        <h2>${item.Title}</h2>
+        <p>${item.Description || ''}</p>
+        <a href="${item.Link}">View Project</a>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function filterProjects() {
+    const keyword = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = allProjects.filter(p =>
+      p.Title.toLowerCase().includes(keyword) ||
+      (p.Description && p.Description.toLowerCase().includes(keyword))
+    );
+    renderProjects(filtered);
+  }
+
+  loadProjectsFromExcel();
+  </script>
 </body>
 </html>

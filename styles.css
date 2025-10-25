@@ -1,49 +1,63 @@
 .horizontal-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    background-color: #b6b2b2;
-    color: blue;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  background-color: #b6b2b2;
 }
-
-.horizontal-nav ul li {
-    margin: 0 15px;
-}
-
+.horizontal-nav ul li { margin: 0 15px; }
 .horizontal-nav ul li a {
-    text-decoration: none;
-    color: #3109e4;
-    font-weight: bold;
+  text-decoration: none;
+  color: #3109e4;
+  font-weight: bold;
+}
+.horizontal-nav ul li a:hover { color: #007BFF; }
+
+.project-card {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.horizontal-nav ul li a:hover {
-    color: #007BFF;
+.project-card h2 {
+  color: #3109e4;
+  font-size: 1.2em;
+  margin-bottom: 5px;
 }
-h1 {
-    text-align: center;
-    color: #0d0d0e;
-    font-size: 2em;
+
+.project-card p {
+  color: #333;
+  font-size: 0.95em;
+  margin-bottom: 10px;
 }
-img {
-    display: block;
-    margin: 0 auto;
-    width: 200px; /* Set thumbnail width */
-    height: auto; /* Maintain aspect ratio */
-    border: 2px solid #ccc; /* Add a border for thumbnail effect */
-    border-radius: 8px; /* Slightly rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    float: left;
-    margin-bottom: 20px; /* Add spacing below the image */
+
+.project-card a {
+  text-decoration: none;
+  color: white;
+  background-color: #3109e4;
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 10px;
 }
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #f1f1f1;
-    color: #333;
-    position: relative; /* Change from fixed to relative */
-    bottom: 0;
-    width: 100%;
-    clear: both; /* Ensure footer clears floated elements */
+
+.project-card a:hover {
+  background-color: #007BFF;
 }
+
+.project-card img {
+  width: 220px;
+  height: auto;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+
