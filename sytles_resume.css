@@ -1,0 +1,55 @@
+/* Resume refined layout */
+:root { --ink:#333; --link:#3109e4; --muted:#555; --border:#ddd; --nav:#b6b2b2; }
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: var(--ink); background-color: #fff; }
+
+.horizontal-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  background-color: var(--nav);
+  position: sticky;
+  top: 0;
+}
+.horizontal-nav ul li { margin: 0 15px; }
+.horizontal-nav ul li a {
+  text-decoration: none;
+  color: var(--link);
+  font-weight: bold;
+  padding: 10px 6px;
+  display: inline-block;
+}
+.horizontal-nav ul li a:hover { color: #007BFF; }
+
+.container { width: min(900px, 92%); margin: 20px auto; padding: 8px; }
+.header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.profile-photo { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+
+.header h1 { margin: 0 0 4px 0; font-size: 1.9rem; }
+.header p { margin: 0 0 10px 0; color: var(--muted); }
+.header a { color: var(--link); text-decoration: none; }
+.header a:hover { text-decoration: underline; }
+
+.section { margin: 20px 0; }
+.section h2 { margin: 0 0 8px 0; font-size: 1.3rem; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+
+article { margin: 12px 0 16px 0; padding: 8px; border-radius: 8px; transition: box-shadow 0.2s ease; }
+article:hover { box-shadow: 0 1px 3px #ccc; }
+article h3 { margin: 0 0 2px 0; font-size: 1.05rem; }
+.meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 6px; font-style: italic; }
+ul { padding-left: 18px; margin: 6px 0; }
+li { margin: 3px 0; }
+.tools { font-size: 0.9rem; color: #444; margin-top: 4px; }
+
+.footer { text-align: center; margin: 30px 0; }
+.footer a { color: var(--link); text-decoration: none; font-weight: bold; }
+.footer a:hover { text-decoration: underline; }
+
+@media print {
+  .horizontal-nav, .footer { display: none; }
+  .container { width: 100%; margin: 0; }
+  a[href^="http"], a[href^="mailto"], a[href^="tel"] { text-decoration: none; color: inherit; }
+}
