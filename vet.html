@@ -28,7 +28,7 @@
   <form id="healthVetFormElem">
     <p>Is this Disability already rated?</p>
     <label><input type="radio" name="disability" value="yes" onclick="showVetHealthOptions('yesVetOptions')"> Yes</label>
-    <label><input type="radio" name="disability" value="no" onclick="showVetHealthOptions('noVetOptions')"> No</label>
+    <label><input type="radio" name="disability" value="no" onclick="showVetHealthOptions('noVetOptions')"> No</label><BR>
 
     <div id="yesVetOptions" style="display:none;">
       <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA</label><br>
@@ -67,7 +67,6 @@
     <p>Is this for the Veteran or family member?</p>
     <label><input type="radio" name="relation" value="Veteran" onclick="showVetVbaOptions('VeteranVetOptions')"> Veteran</label>
     <label><input type="radio" name="relation" value="Family" onclick="showVetVbaOptions('FamilyVetOptions')"> Family</label>
-
     <div id="VeteranVetOptions" style="display:none;">
       <label><input type="checkbox" name="CHAMP-VA"> CHAMP VA</label><br>
       <label><input type="checkbox" name="Disability-Compensation"> Disability Compensation</label><br>
