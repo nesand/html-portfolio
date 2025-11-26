@@ -2,177 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Knowledge Base</title>
-  <link rel="stylesheet" href="KBstyle.css">
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nestor Sandoval | Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<h1>Knowledge Base</h1>
-
-<div id="loading">Loading data...</div>
-
-<div class="controls">
-  <input id="search" type="text" placeholder="Search" oninput="filterData()">
-  <button onclick="resetData()">Reset</button>
-  <button onclick="downloadFiltered('xlsx')">Excel</button>
-  <!--<button onclick="downloadFiltered('csv')">CSV</button>-->
-  <button onclick="window.print()">Print</button>
-</div>
-
-<div id="tagGroupToggle" onclick="toggleGroups()">Group by Tags</div>
-
-<div id="groupContainer"></div>
-
-<div class="tableWrap" id="tableContainer">
-<table id="results">
-<thead>
-  <tr>
-    <th onclick="sortTable('Title')">Title</th>
-    <th onclick="sortTable('Notes')">Notes</th>
-    <th onclick="sortTable('Tags')">Tags</th>
-    <th onclick="sortTable('URL')">URL</th>
-  </tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-
-<script>
-let kb = [];
-let filteredData = [];
-let grouped = false;
-
-async function loadExcelData() {
-  const res = await fetch('knowledge_data.xlsx');
-  const buf = await res.arrayBuffer();
-  const wb = XLSX.read(buf, { type: 'array' });
-
-  let combined = [];
-  wb.SheetNames.forEach(name => {
-    const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { defval: '' });
-    rows.forEach(r => {
-      combined.push({
-        Title: r.Title || '',
-        Notes: r.Notes || '',
-        Tags: r.Tags || '',
-        URL: r.URL || ''
-      });
-    });
-  });
-
-  kb = combined;
-  filteredData = kb;
-  document.getElementById('loading').style.display = 'none';
-  displayResults(kb);
-}
-
-function displayResults(data) {
-  if (grouped) {
-    buildGroups(data);
-    return;
-  }
-
-  const body = document.querySelector('#results tbody');
-  body.innerHTML = data.map(d => `
-    <tr>
-      <td>${d.Title}</td>
-      <td>${d.Notes}</td>
-      <td>${d.Tags}</td>
-      <td>${d.URL ? `<a href="${d.URL}" target="_blank">${d.URL}</a>` : ''}</td>
-    </tr>
-  `).join('');
-}
-
-function filterData() {
-  const q = document.getElementById('search').value.toLowerCase();
-
-  filteredData = kb.filter(d =>
-    d.Title.toLowerCase().includes(q) ||
-    d.Notes.toLowerCase().includes(q) ||
-    d.Tags.toLowerCase().includes(q)
-  );
-
-  displayResults(filteredData);
-}
-
-function resetData() {
-  document.getElementById('search').value = '';
-  filteredData = kb;
-  displayResults(kb);
-}
-
-function sortTable(col) {
-  filteredData = [...filteredData].sort((a, b) => {
-    const A = a[col].toLowerCase();
-    const B = b[col].toLowerCase();
-    return A.localeCompare(B);
-  });
-  displayResults(filteredData);
-}
-
-function toggleGroups() {
-  grouped = !grouped;
-  if (grouped) {
-    document.getElementById('tableContainer').style.display = 'none';
-    displayResults(filteredData);
-  } else {
-    document.getElementById('groupContainer').innerHTML = '';
-    document.getElementById('tableContainer').style.display = 'block';
-    displayResults(filteredData);
-  }
-}
-
-function buildGroups(data) {
-  const box = document.getElementById('groupContainer');
-  box.innerHTML = '';
-
-  const groups = {};
-
-  data.forEach(row => {
-    const tags = row.Tags.split(',').map(t => t.trim()).filter(t => t.length);
-    tags.forEach(tag => {
-      if (!groups[tag]) groups[tag] = [];
-      groups[tag].push(row);
-    });
-  });
-
-  Object.keys(groups).sort().forEach(tag => {
-    const section = document.createElement('div');
-    section.className = 'groupBox';
-    section.innerHTML = `
-      <h2>${tag}</h2>
-      <div class="groupItems">
-        ${groups[tag].map(d => `
-          <div class="card">
-            <div class="cardTitle">${d.Title}</div>
-            <div class="cardNotes">${d.Notes}</div>
-            <div class="cardURL">${d.URL ? `<a href="${d.URL}" target="_blank">${d.URL}</a>` : ''}</div>
-          </div>
-        `).join('')}
+  <header class="header">
+    <nav class="horizontal-nav">
+      <ul>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./Resume.html">Resume</a></li>
+        <li><a href="./Projects.html">Projects</a></li>
+        <li><a href="./Contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="container header-content">
+      <div>
+        <h1>Nestor Sandoval</h1>
+        <p>IT Specialist & Web Developer</p>
+        <p>Building clean, reliable, and user-focused web solutions.</p>
       </div>
-    `;
-    box.appendChild(section);
-  });
-}
+    </div>
+  </header>
 
-function stamp() {
-  const d = new Date();
-  return d.toISOString().replace(/[:T]/g,'_').slice(0,16);
-}
+  <main class="container">
+    <section class="section">
+      <h2>About Me</h2>
+      <p>I design and maintain modern websites with a focus on usability and simplicity. My background in IT support and system management gives me a unique perspective on creating stable, secure, and efficient web solutions.</p>
+    </section>
 
-function downloadFiltered(type) {
-  if (!filteredData.length) return;
+    <section class="section">
+      <h2>Skills</h2>
+      <ul>
+        <li>HTML, CSS, and JavaScript</li>
+        <li>System and Network Support</li>
+        <li>Active Directory and Endpoint Management</li>
+        <li>Cloud & DNS Configuration (AWS, Cloudflare)</li>
+        <li>Knowledge Base Documentation</li>
+      </ul>
+    </section>
 
-  const ws = XLSX.utils.json_to_sheet(filteredData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Results');
-  const name = `KB_${stamp()}.${type === 'csv' ? 'csv' : 'xlsx'}`;
-  XLSX.writeFile(wb, name, type === 'csv' ? { bookType:'csv' } : {});
-}
+    <section class="section">
+      <h2>Recent Projects</h2>
+      <article class="project-card">
+        <h3>VetsSearch</h3>
+        <p>A veteran resource portal with integrated search and Excel-based updates.</p>
+        <a href="https://vetssearch.pages.dev" target="_blank">View Project</a>
+      </article>
 
-loadExcelData();
-</script>
+      <article class="project-card">
+        <h3>Flying Marlins Band Site</h3>
+        <p>Music and press site for a band, built with Excel-driven gallery and update tools.</p>
+        <a href="https://flyingmarlins.pages.dev" target="_blank">View Project</a>
+      </article>
+    </section>
+  </main>
 
+  <footer class="footer">
+    <p>&copy; 2025 Nestor Sandoval</p>
+  </footer>
 </body>
 </html>
