@@ -1,22 +1,137 @@
-body{font-family:Arial,Helvetica,sans-serif;margin:20px;background:#f7f9fc}
-h1{text-align:center}
-.controls{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
-input{padding:6px 8px}
-button{padding:6px 10px;cursor:pointer}
-table{width:100%;border-collapse:collapse;background:#fff}
-th,td{border:1px solid #ddd;padding:8px;text-align:left}
-th{background:#0b5cff;color:#fff}
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #EFF4FF;
+}
 
-.horizontal-nav ul {
-    list-style: none;
-    padding: 2px;
-    margin: 2px;
-    display: flex
-;
-    justify-content: center;
-    background-color: #b6b2b2;
-        color: blue;
-    }
-    .horizontal-nav ul li {
-    margin: 0 15px;
+h1 { 
+  text-align: center; 
+  color: #12315F; 
+  margin-bottom: 15px; 
+}
+
+#loading { 
+  text-align: center; 
+  font-weight: bold; 
+  margin-bottom: 20px; 
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.controls input {
+  padding: 10px;
+  width: 260px;
+  border: 1px solid #5A8FFF;
+  border-radius: 4px;
+}
+
+.controls button {
+  padding: 10px 18px;
+  width: 110px;
+  background: #1362FE;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+#tagGroupToggle {
+  margin: 8px auto 16px auto;
+  width: max-content;
+  padding: 8px 14px;
+  background: #5A8FFF;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.tableWrap { 
+  max-height: 520px; 
+  overflow-y: auto; 
+}
+
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  background: white; 
+}
+
+thead th {
+  background: #1362FE;
+  color: white;
+  padding: 14px;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  position: sticky;
+  top: 0;
+}
+
+tbody td {
+  padding: 14px;
+  line-height: 1.45;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(odd) { background: #f6f7ff; }
+tbody tr:nth-child(even) { background: #e7edff; }
+
+tbody tr:hover { background: #d1ddff; }
+
+/* Group cards */
+.groupBox { 
+  margin-bottom: 38px; 
+}
+
+.groupBox h2 {
+  background: #1362FE;
+  color: white;
+  padding: 12px;
+  margin-bottom: 18px;
+}
+
+.groupItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-left: 5px solid #1362FE;
+  padding: 16px;
+  width: 310px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.10);
+}
+
+.cardTitle { 
+  font-weight: 700; 
+  font-size: 17px; 
+  margin-bottom: 8px; 
+  color: #12315F;
+}
+
+.cardNotes { 
+  font-size: 14px; 
+  margin-bottom: 12px; 
+  line-height: 1.55; 
+}
+
+.cardURL a { 
+  color: #1362FE; 
+}
+
+/* Print Layout */
+@media print {
+  body { background: white; }
+  .controls, #tagGroupToggle { display: none; }
+  .tableWrap { max-height: none; }
+  table { font-size: 12px; }
+  .card { page-break-inside: avoid; }
 }
